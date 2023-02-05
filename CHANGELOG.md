@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-05 0.0.4
+
+- Fixed `string.ts` document error again.
+
 ## 2023-02-05 0.0.3
 
 - Fixed `string.ts` document error.

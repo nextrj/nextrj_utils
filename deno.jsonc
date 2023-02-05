@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": false
+  },
+  "fmt": {
+    "options": {
+      "useTabs": false,
+      "lineWidth": 120,
+      "indentWidth": 2,
+      "singleQuote": false,
+      "semiColons": false
+    }
+  },
+  "tasks": {
+    "test": "deno test --allow-read --allow-write"
+  }
+}

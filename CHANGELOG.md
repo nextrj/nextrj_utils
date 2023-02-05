@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-05 0.0.3
+
+- Fixed `string.ts` document error.
+
 ## 2023-02-05 0.0.2
 
 - Add method `string.ts/truncate` for truncate string by max-byte-length or max-code-point-length.

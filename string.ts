@@ -2,13 +2,27 @@
 
 /** Utilities for string.
  *
- * Codes in the examples check whether the path exists:
+ * Examples:
  *
  * ```ts
  * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
- * import { truncate } from "https://deno.land/x/nextrj/utils@$VERSION/string.ts"
- * const s = truncate("123456", 3)
- * assertStrictEquals(s, "123")
+ * import { truncate } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
+ *
+ * const source = "z中" // z = 1 byte, 中 = 3 bytes"
+ * // default truncate by max-byte-length
+ * assertStrictEquals(truncate(source, 3), "z")
+ * assertStrictEquals(truncate(source, 4), "z中")
+ * // truncate by max-code-point-length
+ * assertStrictEquals(truncate(source, 2, { byByte: false }), "z中")
+ * assertStrictEquals(truncate(source, 3, { byByte: false }), "z中")
+ *
+ * const source = "z🦄" // z = 1 byte, 🦄 = 4 bytes"
+ * // default truncate by max-byte-length
+ * assertStrictEquals(truncate(source, 4), "z")
+ * assertStrictEquals(truncate(source, 5), "z🦄")
+ * // truncate by max-code-point-length
+ * assertStrictEquals(truncate(source, 1, { byByte: false }), "z")
+ * assertStrictEquals(truncate(source, 2, { byByte: false }), "z🦄")
  * ```
  *
  * @module

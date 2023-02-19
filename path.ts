@@ -5,7 +5,7 @@
  * Codes in the examples check whether the path exists:
  *
  * ```ts
- * import { exists, existsSync } from "https://deno.land/x/nextrj/utils@$VERSION/path.ts"
+ * import { exists, existsSync } from "https://deno.land/x/nextrj_utils@$VERSION/path.ts"
  * const pathExists = await exists("./foo/bar")
  * const pathExistsSync = existsSync("./foo/bar")
  * console.log(pathExists);     // true or false

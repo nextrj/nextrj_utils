@@ -2,7 +2,7 @@
 
 /** Utilities for string.
  *
- * Examples:
+ * Example for truncate string:
  *
  * ```ts
  * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
@@ -32,6 +32,18 @@
  * // truncate by max-code-point-length
  * assertStrictEquals(truncate(source, 1, { byByte: false }), "z")
  * assertStrictEquals(truncate(source, 2, { byByte: false }), "z🦄")
+ * ```
+ *
+ * Example for format string template:
+ *
+ * ```ts
+ * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
+ * import { format } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
+ *
+ * assertStrictEquals(format("${a} / ${b}", { a: 50, b: 100 }), "50 / 100")
+ *
+ * const f = (v: number): number => ++v
+ * assertStrictEquals(format("${v}-${f(1)}", { v: 1, f }), "1-2")
  * ```
  *
  * @module
@@ -94,4 +106,17 @@ export function truncate(
     if (codesLen > maxLength) return codes.slice(0, maxLength).join("")
     else return source
   }
+}
+
+/**
+ * Format the {@link template} with the specific {@link params}.
+ *
+ * Example:
+ * ```ts
+ * format("${a}/${b}", {a: 50, b: 100}) // "50/100"
+ * ```
+ */
+export function format(template: string, params: Record<string, unknown>): string {
+  const fn = new Function(...Object.keys(params), "return `" + template + "`;")
+  return fn(...Object.values(params))
 }

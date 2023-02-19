@@ -1,5 +1,12 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-19 0.0.5
+
+- Add string template format function.
+  > `format("${a}/${b}", {a: 50, b: 100}) // "50/100"`
+- Polishing README
+- Fixed `path.ts` document error
+
 ## 2023-02-05 0.0.4
 
 - Fixed `string.ts` document error again.

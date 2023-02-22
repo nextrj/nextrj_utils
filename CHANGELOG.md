@@ -1,5 +1,11 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-22 0.1.0
+
+- Format seconds to duration (`duration.ts`).
+  - assertStrictEquals(format(2 * 60 + 15), "02:15")
+  - assertStrictEquals(format(13 * 60 * 60 + 2 * 60 + 15), "13:02:15")
+
 ## 2023-02-19 0.0.5
 
 - Add string template format function.

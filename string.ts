@@ -4,38 +4,6 @@ import { stringWidth } from "./deps.ts"
 /**
  * Utilities for string.
  *
- * Example for truncate string:
- *
- * ```ts
- * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
- * import { truncate } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
- *
- * const source = "z±" // z = 1 byte, ± = 2 bytes"
- * // default truncate by max-byte-length
- * assertStrictEquals(truncate(source, 2), "z")
- * assertStrictEquals(truncate(source, 3), "z±")
- *
- * // truncate by max-code-point-length
- * assertStrictEquals(truncate(source, 1, { byByte: false }), "z")
- * assertStrictEquals(truncate(source, 2, { byByte: false }), "z±")
- *
- * const source = "z中" // z = 1 byte, 中 = 3 bytes"
- * // default truncate by max-byte-length
- * assertStrictEquals(truncate(source, 3), "z")
- * assertStrictEquals(truncate(source, 4), "z中")
- * // truncate by max-code-point-length
- * assertStrictEquals(truncate(source, 1, { byByte: false }), "z")
- * assertStrictEquals(truncate(source, 2, { byByte: false }), "z中")
- *
- * const source = "z🦄" // z = 1 byte, 🦄 = 4 bytes"
- * // default truncate by max-byte-length
- * assertStrictEquals(truncate(source, 4), "z")
- * assertStrictEquals(truncate(source, 5), "z🦄")
- * // truncate by max-code-point-length
- * assertStrictEquals(truncate(source, 1, { byByte: false }), "z")
- * assertStrictEquals(truncate(source, 2, { byByte: false }), "z🦄")
- * ```
- *
  * Example for format string template:
  *
  * ```ts
@@ -46,6 +14,33 @@ import { stringWidth } from "./deps.ts"
  *
  * const f = (v: number): number => ++v
  * assertStrictEquals(format("${v}-${f(1)}", { v: 1, f }), "1-2")
+ * ```
+ *
+ * Example for truncate string:
+ *
+ * ```ts
+ * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
+ * import { truncate } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
+ *
+ * const maxLen = 10
+ * console.log(truncate("=".repeat(1000), maxLen))
+ * console.log(truncate("±".repeat(1000), maxLen))
+ * console.log(truncate("★".repeat(1000), maxLen))
+ * console.log(truncate("中".repeat(1000), maxLen))
+ * console.log(truncate("🦄".repeat(1000), maxLen))
+ * console.log(truncate("🦄".repeat(1000), maxLen))
+ * console.log(truncate("=中±🦄±中=".repeat(1000), maxLen))
+ *
+ * // they should all have the very similar visable width in the terminal:
+ * ------- output -------
+ * ==========
+ * ±±±±±±±±±±
+ * ★★★★★★★★★★
+ * 中中中中中
+ * 🦄🦄🦄🦄🦄
+ * 🦄🦄🦄🦄🦄
+ * =中±🦄±中=
+ * ----- output end -----
  * ```
  *
  * @module
@@ -102,24 +97,23 @@ export function byteLength(source: string): number {
   return textEncoder.encode(source).length
 }
 
-export type TruncateOptions = {
-  /** Whether truncate by max-byte-length or max-code-point-length. Defaults is true truncate by max-byte-length. */
-  byByte: boolean
+export enum MaxLenType {
+  MaxColumnCount,
+  MaxByteLength,
+  MaxWordCount,
 }
 
 /**
  * Truncate the specified `source` string to a max-length string.
- * Defaults truncate by max-byte-length.
- *
- * If `options.byByte` is false value, then truncate by max-code-point-length
- * (not the same code-unit-length of `String.length`).
+ * Defaults truncate by max-column-count for better match visable with.
  */
 export function truncate(
   source: string,
   maxLen: number,
-  options: TruncateOptions = { byByte: true },
+  maxLenType: MaxLenType = MaxLenType.MaxColumnCount,
 ): string {
-  const maxLength = Math.max(0, maxLen)
+  if (source.length === 0) return source
+  if (maxLen < 0) throw new Error(`Argument 'maxLen' should greater than 0.`)
 
   // split source to code array by code-point.
   // don't use `source.split("")` because it use code-unit-length.
@@ -128,21 +122,33 @@ export function truncate(
   const codesLen = codes.length
 
   // truncate it
-  if (options.byByte) { // truncate by max-byte-length
-    if (codesLen > maxLength || byteLength(source) > maxLength) {
+  if (maxLenType === MaxLenType.MaxColumnCount) { // truncate by max-column-count
+    if (columnCount(source) > maxLen) {
       const ss = []
-      let byteCounter = 0
+      let count = 0
       for (const code of codes) {
-        byteCounter += byteLength(code)
-        if (byteCounter <= maxLength) ss.push(code)
+        // console.log("code=" + code)
+        count += columnCount(code)
+        if (count <= maxLen) ss.push(code)
         else break
       }
       return ss.join("")
     } else return source
-  } else { // truncate by max-code-point-length
-    if (codesLen > maxLength) return codes.slice(0, maxLength).join("")
+  } else if (maxLenType === MaxLenType.MaxByteLength) { // truncate by max-byte-length
+    if (byteLength(source) > maxLen) {
+      const ss = []
+      let count = 0
+      for (const code of codes) {
+        count += byteLength(code)
+        if (count <= maxLen) ss.push(code)
+        else break
+      }
+      return ss.join("")
+    } else return source
+  } else if (maxLenType === MaxLenType.MaxWordCount) { // truncate by max-code-point-length
+    if (codesLen > maxLen) return codes.slice(0, maxLen).join("")
     else return source
-  }
+  } else throw new Error(`Unsupport maxLenType of '${maxLenType}'`)
 }
 
 /**

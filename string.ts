@@ -1,4 +1,5 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
+import { stringWidth } from "./deps.ts"
 
 /**
  * Utilities for string.
@@ -71,6 +72,21 @@ const textEncoder = new TextEncoder()
 export function wordCount(source: string): number {
   // same with `Array.from(source).length`
   return [...source].length
+}
+
+/**
+ * Count the visable width of a string. Similar with terminal columns.
+ *
+ * - ASCII character has 1 with.
+ * - Chiness character and Emoji have 2 width.
+ *
+ * - columnCount("a") // 1
+ * - columnCount("±") // 1
+ * - columnCount("中") // 2
+ * - columnCount("🦄") // 2
+ */
+export function columnCount(source: string): number {
+  return stringWidth(source)
 }
 
 /**

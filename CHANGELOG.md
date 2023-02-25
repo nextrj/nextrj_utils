@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-25 0.2.1
+
+- Fixed `string.ts` document error.
+
 ## 2023-02-25 0.2.0
 
 - Rename function `codePointLength` to `wordCount`.

@@ -1,5 +1,4 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
-import { stringWidth } from "./deps.ts"
 
 /**
  * Utilities for string.
@@ -45,6 +44,8 @@ import { stringWidth } from "./deps.ts"
  *
  * @module
  */
+
+import { stringWidth } from "./deps.ts"
 
 // only for UTF8 https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder
 const textEncoder = new TextEncoder()

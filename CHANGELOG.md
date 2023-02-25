@@ -1,5 +1,11 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-25 0.2.0
+
+- Rename function `codePointLength` to `wordCount`.
+- Add method `string.ts/columnCount` for get the visable width of a string.
+- Refactor method `string.ts/truncate` to default truncate by max-column-count.
+
 ## 2023-02-22 0.1.0
 
 - Format seconds to duration (`duration.ts`).

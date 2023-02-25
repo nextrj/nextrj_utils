@@ -1,6 +1,7 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
 
-/** Utilities for string.
+/**
+ * Utilities for string.
  *
  * Example for truncate string:
  *
@@ -52,16 +53,34 @@
 // only for UTF8 https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder
 const textEncoder = new TextEncoder()
 
-/** Get the specified `source` string's code-point-length.
+/**
+ * Get the specified `source` string's code-point-length.
+ * One word (even multi-byte string) has one length.
  *
- * This is not the same code-unit-length of `String.length` for multi-byte string.
- * See https://blog.bitsrc.io/how-big-is-a-string-ef2af3d222e6
+ * It is not the same with code-unit-length of `String.length` for multi-byte string.
+ * See https://blog.bitsrc.io/how-big-is-a-string-ef2af3d222e6.
+ *
+ * - codePointLength("a中🦄") // 3
+ * - code-unit-length:
+ *     - "a中🦄".length // 4
+ *     - "a".length // 1
+ *     - "中".length // 1
+ *     - "🦄".length // 2
  */
 export function codePointLength(source: string): number {
+  // same with `Array.from(source).length`
   return [...source].length
 }
 
-/** Get the specified `source` string's byte-length. */
+/**
+ * Get the specified `source` string's byte-length.
+ *
+ * - byteLength("a") // 1
+ * - byteLength("±") // 2
+ * - byteLength("★") // 3
+ * - byteLength("中") // 3
+ * - byteLength("🦄") // 4
+ */
 export function byteLength(source: string): number {
   return textEncoder.encode(source).length
 }
@@ -71,7 +90,8 @@ export type TruncateOptions = {
   byByte: boolean
 }
 
-/** Truncate the specified `source` string to a max-length string.
+/**
+ * Truncate the specified `source` string to a max-length string.
  * Defaults truncate by max-byte-length.
  *
  * If `options.byByte` is false value, then truncate by max-code-point-length

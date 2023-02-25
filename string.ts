@@ -54,20 +54,21 @@
 const textEncoder = new TextEncoder()
 
 /**
- * Get the specified `source` string's code-point-length.
+ * Count the number of words in a string.
  * One word (even multi-byte string) has one length.
  *
  * It is not the same with code-unit-length of `String.length` for multi-byte string.
- * See https://blog.bitsrc.io/how-big-is-a-string-ef2af3d222e6.
+ * The count is base on the code-point-length.
+ * See [<How big is a JavaScript string?>](https://blog.bitsrc.io/how-big-is-a-string-ef2af3d222e6).
  *
- * - codePointLength("a中🦄") // 3
- * - code-unit-length:
+ * - wordCount("a中🦄") // 3
+ * - comparison with code-unit-length:
  *     - "a中🦄".length // 4
  *     - "a".length // 1
  *     - "中".length // 1
  *     - "🦄".length // 2
  */
-export function codePointLength(source: string): number {
+export function wordCount(source: string): number {
   // same with `Array.from(source).length`
   return [...source].length
 }

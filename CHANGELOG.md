@@ -1,5 +1,14 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-26 0.3.0
+
+- Add method `string.ts/truncateFileName` for shorten a filename with its extension
+  ```ts
+  truncateFilename("123456789.zip", 10) // "12...9.zip"
+  // 🦄 is 2 column width
+  truncateFilename("1234567🦄.zip", 10) // "1...🦄.zip"
+  ```
+
 ## 2023-02-25 0.2.1
 
 - Fixed `string.ts` document error.

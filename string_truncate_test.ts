@@ -1,6 +1,6 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
 import { assertStrictEquals, assertThrows } from "./deps.ts"
-import { columnCount, MaxLenType, truncate } from "./string.ts"
+import { columnCount, MaxLenType, truncate, truncateFilename } from "./string.ts"
 
 Deno.test("maxLen < 0 should throw error", () => {
   assertThrows(() => truncate("abc", -1), Error, "Argument 'maxLen' should greater than 0.")
@@ -131,4 +131,33 @@ Deno.test("truncate long string to max-column-count", () => {
   console.log(truncate("🦄".repeat(1000), maxLen))
   console.log(truncate("🦄".repeat(1000), maxLen))
   console.log(truncate("=中±🦄±中=".repeat(1000), maxLen))
+})
+
+Deno.test("truncate filename", () => {
+  const maxLen = 10
+
+  let fileName = "123456789.zip"
+  // at lease return "1...9.zip"
+  assertStrictEquals(truncateFilename(fileName, 1), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 2), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 3), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 4), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 5), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 6), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 7), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 8), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, 9), "1...9.zip")
+  assertStrictEquals(truncateFilename(fileName, maxLen), "12...9.zip")
+
+  fileName = "a/1234567.zip"
+  assertStrictEquals(truncateFilename(fileName, maxLen), "a/...7.zip")
+  assertStrictEquals(truncateFilename(fileName, maxLen + 1), "a/1...7.zip")
+
+  fileName = "1234567🦄.zip"
+  assertStrictEquals(truncateFilename(fileName, maxLen), "1...🦄.zip")
+
+  fileName = "a/1234567🦄.zip"
+  assertStrictEquals(truncateFilename(fileName, maxLen), "a...🦄.zip")
+  assertStrictEquals(truncateFilename(fileName, maxLen + 1), "a/...🦄.zip")
+  assertStrictEquals(truncateFilename(fileName, maxLen + 2), "a/1...🦄.zip")
 })

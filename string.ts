@@ -15,6 +15,17 @@
  * assertStrictEquals(format("${v}-${f(1)}", { v: 1, f }), "1-2")
  * ```
  *
+ * Example for truncate filename:
+ *
+ * ```ts
+ * import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
+ * import { truncateFilename } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
+ *
+ * truncateFilename("123456789.zip", 10) // "12...9.zip"
+ * // 🦄 is 2 column width
+ * truncateFilename("1234567🦄.zip", 10) // "1...🦄.zip"
+ * ```
+ *
  * Example for truncate string:
  *
  * ```ts
@@ -45,7 +56,7 @@
  * @module
  */
 
-import { stringWidth } from "./deps.ts"
+import { extname, stringWidth } from "./deps.ts"
 
 // only for UTF8 https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder
 const textEncoder = new TextEncoder()
@@ -150,6 +161,43 @@ export function truncate(
     if (codesLen > maxLen) return codes.slice(0, maxLen).join("")
     else return source
   } else throw new Error(`Unsupport maxLenType of '${maxLenType}'`)
+}
+
+/**
+ * Truncate the filename to a max-length string with its extension.
+ *
+ * Rule:
+ * 1. Keep the extension name.
+ * 2. Truncate the middle string near by the extension.
+ * 3. Use ellipsis symbol `...` to replace the truncated part.
+ *
+ * Examples:
+ *
+ * ```
+ * truncateFilename("123456789.zip", 10) // "12...9.zip"
+ * truncateFilename("12345678🦄.zip", 10) // "1...🦄.zip"
+ * ```
+ */
+export function truncateFilename(
+  fileName: string,
+  maxLen: number,
+): string {
+  // a/b/123456789🦄.zip:
+  // 1. ext=".zip"
+  // 2. name="123456789"
+  // 3. lastKeepPart="🦄.zip"
+  // 4. toTruncatePart="123456789"
+  const ext = extname(fileName)
+  if (ext === "") return truncate(fileName, maxLen, MaxLenType.MaxColumnCount)
+  const name = fileName.substring(0, fileName.length - ext.length)
+  const codes = [...name]
+  const lastKeepPart = codes[codes.length - 1] + ext
+  const toTruncatePart = codes.slice(0, codes.length - 1).join("")
+
+  const maxLen2 = maxLen - columnCount(lastKeepPart)
+  // console.log(`ext=${ext}, lastKeepPart=${lastKeepPart}, toTruncatePart=${toTruncatePart}, maxLen2=${maxLen2}`)
+  if (maxLen2 <= 3 + columnCount(codes[0])) return codes[0] + "..." + lastKeepPart
+  else return truncate(toTruncatePart, maxLen2 - 3, MaxLenType.MaxColumnCount) + "..." + lastKeepPart
 }
 
 /**

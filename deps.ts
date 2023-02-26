@@ -2,7 +2,7 @@
 
 // deno standard library
 export { assertStrictEquals, assertThrows } from "https://deno.land/std@0.175.0/testing/asserts.ts"
-export { dirname } from "https://deno.land/std@0.175.0/path/mod.ts"
+export { dirname, extname } from "https://deno.land/std@0.175.0/path/mod.ts"
 
 // 3-parts
 import stringWidth from "https://cdn.skypack.dev/string-width@5.1.2"

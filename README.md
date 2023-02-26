@@ -28,6 +28,17 @@ const f = (v: number): number => ++v
 assertStrictEquals(format("${v}-${f(1)}", { v: 1, f }), "1-2")
 ```
 
+**Truncate filename:**
+
+```ts
+import { assertStrictEquals } from "https://deno.land/std@$STD_VERSION/testing/asserts.ts"
+import { truncateFilename } from "https://deno.land/x/nextrj_utils@$VERSION/string.ts"
+
+truncateFilename("123456789.zip", 10) // "12...9.zip"
+// 🦄 is 2 column width
+truncateFilename("1234567🦄.zip", 10) // "1...🦄.zip"
+```
+
 **Truncate string:**
 
 ```ts

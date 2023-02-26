@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-02-26 0.3.1
+
+- Polishing document.
+
 ## 2023-02-26 0.3.0
 
 - Add method `string.ts/truncateFileName` for shorten a filename with its extension

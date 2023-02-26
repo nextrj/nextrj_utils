@@ -55,16 +55,9 @@ console.log(truncate("🦄".repeat(1000), maxLen))
 console.log(truncate("=中±🦄±中=".repeat(1000), maxLen))
 
 // they should all have the very similar visable width in the terminal:
-------- output -------
-==========
-±±±±±±±±±±
-★★★★★★★★★★
-中中中中中
-🦄🦄🦄🦄🦄
-🦄🦄🦄🦄🦄
-=中±🦄±中=
------ output end -----
 ```
+
+![](./assets/string_truncate_01.png)
 
 ### Format seconds to duration
 

@@ -73,3 +73,28 @@ assertStrictEquals(format(2 * 60 + 15), "02:15")
 assertStrictEquals(format(13 * 60 * 60 + 2 * 60 + 15), "13:02:15")
 assertStrictEquals(format(24 * 60 * 60 + 2 * 60 + 15), "24:02:15")
 ```
+
+### Fetch remote file with progress callback
+
+```ts
+import { Fetcher } from "https://deno.land/x/nextrj_utils@$VERSION/file.ts"
+
+const fetcher = new Fetcher(
+  "https://www.example.com/test.pdf",
+  {
+    to: "example-test.pdf",
+    on: {
+      start(total: number) {
+        console.log(`start: total=${total}`)
+      },
+      received(received: number, total: number) {
+        console.log(`received: received=${received}, total=${total}`)
+      },
+      end(success: boolean) {
+        console.log(`end: success=${success}`)
+      },
+    },
+  },
+)
+await fetcher.fetch()
+```

@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-05 0.4.0
+
+- Add file fetcher with progress callback (start, received, end).
+
 ## 2023-02-26 0.3.1
 
 - Polishing document.

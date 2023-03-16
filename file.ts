@@ -115,14 +115,18 @@ export class Fetcher {
  * Examples:
  * - "https://test.com/xxx" > "xxx"
  * - "https://test.com/xxx/" > "xxx"
+ * - "https://test.com/" > "test.com"
  * - "file://path/to/xxx" > "xxx"
  * - "file://path/to/xxx/" > "xxx"
+ * - "file://path/" > "path"
  */
 export function getLastPathName(url: string): string {
   let pathname
   try {
     // consider url is a regular url, like 'http://...', 'file://...'
-    pathname = new URL(url).pathname
+    const t = new URL(url)
+    if (t.pathname === "/") return t.hostname
+    else pathname = t.pathname
   } catch {
     // consider url is a regular path
     pathname = url

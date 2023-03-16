@@ -7,8 +7,12 @@ Deno.test("get last path name", () => {
   // url
   assertStrictEquals(getLastPathName("https://test.com/xxx"), "xxx")
   assertStrictEquals(getLastPathName("https://test.com/xxx/"), "xxx")
+  assertStrictEquals(getLastPathName("https://test.com/"), "test.com")
+  assertStrictEquals(getLastPathName("https://test.com"), "test.com")
   assertStrictEquals(getLastPathName("file://test.com/xxx"), "xxx")
   assertStrictEquals(getLastPathName("file://test.com/xxx/"), "xxx")
+  assertStrictEquals(getLastPathName("file://test.com/"), "test.com")
+  assertStrictEquals(getLastPathName("file://test.com"), "test.com")
 
   // path
   assertStrictEquals(getLastPathName("/test.com/xxx.y"), "xxx.y")

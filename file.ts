@@ -30,7 +30,9 @@
  * @module
  */
 
-import { extension, paseContentDisposition, writeAll } from "./deps.ts"
+import { dirname, extension, joinPath, paseContentDisposition, writeAll } from "./deps.ts"
+import { existsSync as pathExistsSync } from "./path.ts"
+import { format as formatTemplate } from "./string.ts"
 
 export type FetcherInit = {
   to?: string
@@ -51,26 +53,29 @@ export class Fetcher {
     this.#options = options
   }
   /** Start fetch the file. */
-  async fetch(): Promise<void> {
+  async fetch(): Promise<string> {
     const response = await fetch(this.#from, this.#options?.fetchOptions)
-    if (response.body) {
-      // get filesize from header
+    if (response.ok) {
+      // get file size from header
       let total = -1
       if (response.headers.has("Content-Length")) {
         total = parseInt(response.headers.get("Content-Length")!)
       }
 
+      // get file name
+      const fileName = getFileName(this.#from, response)
+      // get the file full path name
+      let filePath = this.#options?.to ? this.#options?.to : joinPath("temp", fileName)
+      // format it: replace `\` to `/` to avoid template string erasing
+      // in win os, path.join use `\` others use `/`
+      filePath = formatTemplate(filePath.replace(/\\/g, "/"), { fileName: fileName })
+
+      // create the target dir if not exists
+      const fileDir = dirname(filePath)
+      if (!pathExistsSync(fileDir)) await Deno.mkdir(fileDir, { recursive: true })
+
       // pipe body to file
-      const toFile: Deno.FsFile = await Deno.open(
-        this.#options?.to ||
-          // get filename from header
-          response.headers.get("content-disposition")?.match(/filename="(.+)"/)?.[1] ||
-          // get from url
-          getLastPathName(this.#from) ||
-          // default filename
-          "unknown",
-        { write: true, create: true },
-      )
+      const toFile: Deno.FsFile = await Deno.open(filePath, { write: true, create: true })
       const fetcher = this as Fetcher
       let received = 0 // sum chunk.byteLength
       const writableStream = new WritableStream({
@@ -100,9 +105,10 @@ export class Fetcher {
           fetcher.#options?.on?.end?.call(this, false)
         },
       })
-      await response.body.pipeTo(writableStream)
+      await response.body?.pipeTo(writableStream)
+      return filePath
     } else {
-      throw new Error("The response's body is undefined or null.")
+      throw new Error(`${response.status} ${response.statusText}`)
     }
   }
 }

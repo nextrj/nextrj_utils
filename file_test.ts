@@ -24,7 +24,7 @@ Deno.test("get last path name", () => {
 
 Deno.test("fetch to default filename", async () => {
   const from = "assets/string_truncate_01.png"
-  const to = "string_truncate_01.png" // extract from url
+  const to = "temp/string_truncate_01.png" // fileName extract from url
   const total = Deno.statSync(from).size
 
   // clean
@@ -55,22 +55,23 @@ Deno.test("fetch to default filename", async () => {
       },
     },
   )
-  await fetcher.fetch()
+  const filePath = await fetcher.fetch()
 
   // verify
-  assertStrictEquals(existsSync(to), true)
-  assertStrictEquals(Deno.statSync(to).size, total)
+  assertStrictEquals(filePath, to)
+  assertStrictEquals(existsSync(filePath), true)
+  assertStrictEquals(Deno.statSync(filePath).size, total)
   assertStrictEquals(callStart, 1)
   assertStrictEquals(callEnd, 1)
   assertStrictEquals(callReceived, total)
 
   // clean
-  Deno.removeSync(to)
+  Deno.removeSync(filePath)
 })
 
 Deno.test("fetch to specific filename", async () => {
   const from = "file.ts"
-  const to = joinPath("temp", from)
+  const to = joinPath("temp", from).replace(/\\/g, "/")
   const total = Deno.statSync(from).size
 
   // clean
@@ -99,9 +100,10 @@ Deno.test("fetch to specific filename", async () => {
       },
     },
   )
-  await fetcher.fetch()
+  const filePath = await fetcher.fetch()
 
   // verify
+  assertStrictEquals(filePath, to)
   assertStrictEquals(existsSync(to), true)
   assertStrictEquals(Deno.statSync(to).size, total)
   assertStrictEquals(callStart, 1)
@@ -114,7 +116,7 @@ Deno.test("fetch to specific filename", async () => {
 
 Deno.test("fetch remote file", async () => {
   const from = "https://docs.spring.io/spring-framework/docs/6.0.6/reference/pdf/spring-framework.pdf"
-  const to = joinPath("temp", "spring-framework.pdf")
+  const to = joinPath("temp", "spring-framework.pdf").replace(/\\/g, "/")
   const total = 20814747
 
   // clean
@@ -143,9 +145,55 @@ Deno.test("fetch remote file", async () => {
       },
     },
   )
-  await fetcher.fetch()
+  const filePath = await fetcher.fetch()
 
   // verify
+  assertStrictEquals(filePath, to)
+  assertStrictEquals(existsSync(to), true)
+  assertStrictEquals(Deno.statSync(to).size, total)
+  assertStrictEquals(callStart, 1)
+  assertStrictEquals(callEnd, 1)
+  assertStrictEquals(callReceived, total)
+
+  // clean
+  Deno.removeSync(to)
+})
+
+Deno.test("fetch file with template options.to", async () => {
+  const from = "file.ts"
+  const to = "temp/file.ts"
+  const total = Deno.statSync(from).size
+
+  // clean
+  if (existsSync(to)) Deno.removeSync(to)
+
+  // fetch
+  let callStart = 0, callReceived = 0, callEnd = 0
+  const fetcher = new Fetcher(
+    `file://${Deno.realPathSync(from)}`,
+    {
+      to: "temp/${fileName}",
+      on: {
+        start(total: number) {
+          callStart++
+          assertStrictEquals(total, total)
+        },
+        received(received: number, total: number) {
+          callReceived = received
+          assertStrictEquals(total, total)
+          assertStrictEquals(received > 0, true)
+        },
+        end(success: boolean) {
+          callEnd++
+          assertStrictEquals(success, true)
+        },
+      },
+    },
+  )
+  const filePath = await fetcher.fetch()
+
+  // verify
+  assertStrictEquals(filePath, to)
   assertStrictEquals(existsSync(to), true)
   assertStrictEquals(Deno.statSync(to).size, total)
   assertStrictEquals(callStart, 1)

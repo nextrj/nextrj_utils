@@ -108,6 +108,7 @@ export class Fetcher {
       await response.body?.pipeTo(writableStream)
       return filePath
     } else {
+      response.body?.cancel()
       throw new Error(`${response.status} ${response.statusText}`)
     }
   }

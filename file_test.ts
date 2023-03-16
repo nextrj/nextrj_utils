@@ -1,5 +1,5 @@
 // Copyright 2023 the NextRJ organization. All rights reserved. MIT license.
-import { assertStrictEquals, joinPath } from "./deps.ts"
+import { assertRejects, assertStrictEquals, joinPath } from "./deps.ts"
 import { existsSync } from "./path.ts"
 import { Fetcher, getLastPathName } from "./file.ts"
 
@@ -203,4 +203,20 @@ Deno.test("fetch file with template options.to", async () => {
 
   // clean
   Deno.removeSync(to)
+})
+
+Deno.test("fetch error by unknown domain", async () => {
+  await assertRejects(
+    () => new Fetcher("https://unknown.unknown/").fetch(),
+    TypeError,
+    "error sending request for url",
+  )
+})
+
+Deno.test("fetch response 403 Forbidden", async () => {
+  await assertRejects(
+    () => new Fetcher("https://v26-web.douyinvod.com").fetch(),
+    Error,
+    "403 Forbidden",
+  )
 })

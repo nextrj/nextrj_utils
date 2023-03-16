@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-16 0.6.0
+
+- Upgrade to `deno/std@0.180.0`.
+
 ## 2023-03-16 0.5.0
 
 - Enhance getLastPathName.

@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-16 0.6.3
+
+- Consumed fetch response body when not ok.
+
 ## 2023-03-16 0.6.2
 
 - Fixed truncateFilename always has `...`

@@ -1,5 +1,12 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-16 0.5.0
+
+- Enhance getLastPathName.
+- Add getFileNameFromContentDisposition method.
+- Add getFileName method.
+- Make `Fetcher.fetch` return file path and `options.to` support template.
+
 ## 2023-03-05 0.4.0
 
 - Add file fetcher with progress callback (start, received, end).

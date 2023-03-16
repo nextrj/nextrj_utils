@@ -30,7 +30,7 @@
  * @module
  */
 
-import { paseContentDisposition, writeAll } from "./deps.ts"
+import { extension, paseContentDisposition, writeAll } from "./deps.ts"
 
 export type FetcherInit = {
   to?: string
@@ -143,4 +143,23 @@ export function getFileNameFromContentDisposition(contentDisposition: string): s
   } catch {
     return undefined
   }
+}
+
+/**
+ * Get the filename from response or request url.
+ * 1. Get from content-disposition's filename* or filename param.
+ * 2. Then get last path name from request url.
+ * 3. Without extention, get from content-type.
+ */
+export function getFileName(requestUrl: string, response: Response): string {
+  let fileName =
+    // get from content-disposition header
+    getFileNameFromContentDisposition(response.headers.get("content-disposition") || "") ||
+    // get from request url
+    getLastPathName(requestUrl)
+
+  // without extention, get from content-type
+  fileName = fileName.includes(".") ? fileName : `${fileName}.${extension(response.headers.get("content-type") || "")}`
+
+  return decodeURIComponent(fileName)
 }

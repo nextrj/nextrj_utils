@@ -9,3 +9,7 @@ export { writeAll } from "https://deno.land/std@0.175.0/streams/mod.ts"
 import stringWidth from "https://cdn.skypack.dev/string-width@5.1.2"
 export { stringWidth }
 // similar with `import stringWidth from "npm:string-width@5.1.2"`
+
+// npm
+import * as contentDisposition from "npm:content-disposition@0.5.4"
+export const paseContentDisposition = contentDisposition.parse

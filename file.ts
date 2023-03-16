@@ -30,7 +30,7 @@
  * @module
  */
 
-import { writeAll } from "./deps.ts"
+import { paseContentDisposition, writeAll } from "./deps.ts"
 
 export type FetcherInit = {
   to?: string
@@ -132,4 +132,15 @@ export function getLastPathName(url: string): string {
     pathname = url
   }
   return pathname.split("/").filter(Boolean).pop() as string
+}
+
+/** Get filename param from content-disposition value. */
+export function getFileNameFromContentDisposition(contentDisposition: string): string | undefined {
+  try {
+    const fileName = paseContentDisposition(contentDisposition)?.parameters?.filename
+    // console.log(`ContentDisposition:filename=${filename}`)
+    return fileName
+  } catch {
+    return undefined
+  }
 }

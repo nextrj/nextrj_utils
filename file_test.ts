@@ -174,7 +174,8 @@ Deno.test("fetch file with template options.to", async () => {
     {
       to: "temp/${fileName}",
       on: {
-        start(total: number) {
+        start(total: number, fileName: string, filePath: string) {
+          console.log(`fileName=${fileName}, filePath=${filePath}`)
           callStart++
           assertStrictEquals(total, total)
         },

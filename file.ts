@@ -37,7 +37,7 @@ import { format as formatTemplate } from "./string.ts"
 export type FetcherInit = {
   to?: string
   on?: {
-    start?: (total: number) => void
+    start?: (total: number, fileName: string, filePath: string) => void
     received?: (received: number, total: number) => void
     end?: (success: boolean) => void
   }
@@ -81,7 +81,7 @@ export class Fetcher {
       const writableStream = new WritableStream({
         start(_controller) {
           // call start callback
-          fetcher.#options?.on?.start?.call(this, total)
+          fetcher.#options?.on?.start?.call(this, total, fileName, filePath)
         },
         async write(chunk, controller) {
           try {

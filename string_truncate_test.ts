@@ -161,3 +161,11 @@ Deno.test("truncate filename", () => {
   assertStrictEquals(truncateFilename(fileName, maxLen + 1), "a/...🦄.zip")
   assertStrictEquals(truncateFilename(fileName, maxLen + 2), "a/1...🦄.zip")
 })
+
+Deno.test("truncate filename edge", () => {
+  const fileName = "spring-boot-reference.pdf"
+  const fileNameLen = columnCount(fileName)
+  assertStrictEquals(fileNameLen, 25)
+  assertStrictEquals(truncateFilename("spring-boot-reference.pdf", fileNameLen), "spring-boot-reference.pdf")
+  assertStrictEquals(truncateFilename("spring-boot-reference.pdf", fileNameLen - 1), "spring-boot-refe...e.pdf")
+})

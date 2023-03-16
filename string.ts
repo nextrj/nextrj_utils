@@ -182,6 +182,7 @@ export function truncateFilename(
   fileName: string,
   maxLen: number,
 ): string {
+  if (maxLen >= columnCount(fileName)) return fileName
   // a/b/123456789🦄.zip:
   // 1. ext=".zip"
   // 2. name="123456789"

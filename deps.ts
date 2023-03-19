@@ -12,5 +12,5 @@ export { stringWidth }
 // similar with `import stringWidth from "npm:string-width@5.1.2"`
 
 // npm
-import * as contentDisposition from "npm:content-disposition@0.5.4"
+import * as contentDisposition from "https://cdn.skypack.dev/content-disposition@0.5.4"
 export const paseContentDisposition = contentDisposition.parse

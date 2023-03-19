@@ -1,5 +1,10 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-19 0.6.4
+
+- Change `npm:content-disposition` to `https://cdn.skypack.dev/content-disposition`
+  > Because `deno compile` not support npm specifiers yet.
+
 ## 2023-03-16 0.6.3
 
 - Consumed fetch response body when not ok.

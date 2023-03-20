@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-20 0.8.0
+
+- Fixed `file.ts/getLastPathName(url)` error again.
+
 ## 2023-03-20 0.7.0
 
 - Fixed `file.ts/getLastPathName(url)` auto encode url error.

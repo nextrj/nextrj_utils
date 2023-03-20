@@ -9,8 +9,12 @@ Deno.test("get last path name", () => {
   assertStrictEquals(getLastPathName("https://test.com/xxx/"), "xxx")
   assertStrictEquals(getLastPathName("https://test.com/"), "test.com")
   assertStrictEquals(getLastPathName("https://test.com"), "test.com")
+  assertStrictEquals(getLastPathName("https://test.com/中文"), "中文")
+  assertStrictEquals(getLastPathName("https://test.com/中文", false), encodeURIComponent("中文"))
   assertStrictEquals(getLastPathName("file://test.com/xxx"), "xxx")
   assertStrictEquals(getLastPathName("file://test.com/xxx/"), "xxx")
+  assertStrictEquals(getLastPathName("file://test.com/中文"), "中文")
+  assertStrictEquals(getLastPathName("file://test.com/中文", false), encodeURIComponent("中文"))
   assertStrictEquals(getLastPathName("file://test.com/"), "test.com")
   assertStrictEquals(getLastPathName("file://test.com"), "test.com")
 
@@ -20,6 +24,10 @@ Deno.test("get last path name", () => {
   assertStrictEquals(getLastPathName("test.com/xxx.y"), "xxx.y")
   assertStrictEquals(getLastPathName("test.com/xxx.y/"), "xxx.y")
   assertStrictEquals(getLastPathName("abc"), "abc")
+  assertStrictEquals(getLastPathName("中文"), "中文")
+  assertStrictEquals(getLastPathName("test.com/中文"), "中文")
+  assertStrictEquals(getLastPathName("D:/test.com/中文"), "中文")
+  assertStrictEquals(getLastPathName("D:/test.com/中文", false), encodeURIComponent("中文"))
 })
 
 Deno.test("fetch to default filename", async () => {

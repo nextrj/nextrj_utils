@@ -119,24 +119,28 @@ export class Fetcher {
  *
  * throw {@link TypeError} if url is not a regular url.
  *
- * Examples:
+ * Examples: (decodeUri=true)
  * - "https://test.com/xxx" > "xxx"
  * - "https://test.com/xxx/" > "xxx"
  * - "https://test.com/" > "test.com"
  * - "file://path/to/xxx" > "xxx"
  * - "file://path/to/xxx/" > "xxx"
  * - "file://path/" > "path"
+ * - "file://path/中文" > "中文"
+ *
+ * Examples: (decodeUri=false|undefined)
+ * - "file://path/中文" > "中文"
  */
-export function getLastPathName(url: string): string {
+export function getLastPathName(url: string, decodeUri = true): string {
   let pathname
   try {
     // consider url is a regular url, like 'http://...', 'file://...'
     const t = new URL(url)
     if (t.pathname === "/") return t.hostname
-    else pathname = t.pathname
+    else pathname = decodeUri ? decodeURIComponent(t.pathname) : t.pathname
   } catch {
     // consider url is a regular path
-    pathname = url
+    pathname = decodeUri ? decodeURIComponent(url) : url
   }
   return pathname.split("/").filter(Boolean).pop() as string
 }

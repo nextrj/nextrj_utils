@@ -5,18 +5,24 @@ import { Fetcher, getLastPathName } from "./file.ts"
 
 Deno.test("get last path name", () => {
   // url
+  assertStrictEquals(getLastPathName("https://test.com/xxx?a=b"), "xxx")
   assertStrictEquals(getLastPathName("https://test.com/xxx"), "xxx")
   assertStrictEquals(getLastPathName("https://test.com/xxx/"), "xxx")
+  assertStrictEquals(getLastPathName("https://test.com/xxx/?a=b"), "xxx")
   assertStrictEquals(getLastPathName("https://test.com/"), "test.com")
+  assertStrictEquals(getLastPathName("https://test.com/?a=b"), "test.com")
   assertStrictEquals(getLastPathName("https://test.com"), "test.com")
+  assertStrictEquals(getLastPathName("https://test.com?a=b"), "test.com")
   assertStrictEquals(getLastPathName("https://test.com/中文"), "中文")
-  assertStrictEquals(getLastPathName("https://test.com/中文", false), encodeURIComponent("中文"))
+  assertStrictEquals(getLastPathName("file://test.com/xxx?a=b"), "xxx")
   assertStrictEquals(getLastPathName("file://test.com/xxx"), "xxx")
   assertStrictEquals(getLastPathName("file://test.com/xxx/"), "xxx")
+  assertStrictEquals(getLastPathName("file://test.com/xxx/?a=b"), "xxx")
   assertStrictEquals(getLastPathName("file://test.com/中文"), "中文")
-  assertStrictEquals(getLastPathName("file://test.com/中文", false), encodeURIComponent("中文"))
   assertStrictEquals(getLastPathName("file://test.com/"), "test.com")
   assertStrictEquals(getLastPathName("file://test.com"), "test.com")
+  assertStrictEquals(getLastPathName("file://D:/xxx"), "xxx")
+  assertStrictEquals(getLastPathName("file://D:\\xxx"), "xxx")
 
   // path
   assertStrictEquals(getLastPathName("/test.com/xxx.y"), "xxx.y")
@@ -27,7 +33,6 @@ Deno.test("get last path name", () => {
   assertStrictEquals(getLastPathName("中文"), "中文")
   assertStrictEquals(getLastPathName("test.com/中文"), "中文")
   assertStrictEquals(getLastPathName("D:/test.com/中文"), "中文")
-  assertStrictEquals(getLastPathName("D:/test.com/中文", false), encodeURIComponent("中文"))
 })
 
 Deno.test("fetch to default filename", async () => {

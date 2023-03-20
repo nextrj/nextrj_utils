@@ -131,18 +131,8 @@ export class Fetcher {
  * Examples: (decodeUri=false|undefined)
  * - "file://path/中文" > "中文"
  */
-export function getLastPathName(url: string, decodeUri = true): string {
-  let pathname
-  try {
-    // consider url is a regular url, like 'http://...', 'file://...'
-    const t = new URL(url)
-    if (t.pathname === "/") return t.hostname
-    else pathname = decodeUri ? decodeURIComponent(t.pathname) : t.pathname
-  } catch {
-    // consider url is a regular path
-    pathname = decodeUri ? decodeURIComponent(url) : url
-  }
-  return pathname.split("/").filter(Boolean).pop() as string
+export function getLastPathName(url: string): string {
+  return url.split("?")[0].replace(/\\/g, "/").split("/").filter(Boolean).pop() as string
 }
 
 /** Get filename param from content-disposition value. */

@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-20 0.7.0
+
+- Fixed `file.ts/getLastPathName(url)` auto encode url error.
+
 ## 2023-03-19 0.6.4
 
 - Change `npm:content-disposition` to `https://cdn.skypack.dev/content-disposition`

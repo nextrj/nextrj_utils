@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-03-21 0.9.0
+
+- Add config property `toIsNotTemplate` to `FetcherInit`.
+
 ## 2023-03-20 0.8.0
 
 - Fixed `file.ts/getLastPathName(url)` error again.

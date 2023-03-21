@@ -36,6 +36,7 @@ import { format as formatTemplate } from "./string.ts"
 
 export type FetcherInit = {
   to?: string
+  toIsNotTemplate?: boolean
   on?: {
     start?: (total: number, fileName: string, filePath: string) => void
     received?: (received: number, total: number) => void
@@ -68,7 +69,9 @@ export class Fetcher {
       let filePath = this.#options?.to ? this.#options?.to : joinPath("temp", fileName)
       // format it: replace `\` to `/` to avoid template string erasing
       // in win os, path.join use `\` others use `/`
-      filePath = formatTemplate(filePath.replace(/\\/g, "/"), { fileName: fileName })
+      if (!this.#options?.toIsNotTemplate) {
+        filePath = formatTemplate(filePath.replace(/\\/g, "/"), { fileName: fileName })
+      }
 
       // create the target dir if not exists
       const fileDir = dirname(filePath)

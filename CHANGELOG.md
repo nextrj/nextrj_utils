@@ -1,5 +1,13 @@
 # NextRJ Utilities Changelog
 
+## 2023-04-12 0.10.0
+
+- Add method `jsonp.ts/parse` for get jsonp response value
+  ```ts
+  parse("callback({ok: true})") // {ok: true}
+  parse("parse("callback([1, 2])")") // [1, 2]
+  ```
+
 ## 2023-03-21 0.9.0
 
 - Add config property `toIsNotTemplate` to `FetcherInit`.

@@ -1,5 +1,16 @@
 # NextRJ Utilities Changelog
 
+## 2023-04-14 0.11.0
+
+- Add method `object.js/recursiveAssign` for recursive assign object property value.
+  ```ts
+  import { recursiveAssign } from "https://deno.land/x/nextrj_utils@$VERSION/object.js"
+  const obj1 = { id: 1, name: "test1", nested: { num: 1, keep: true } }
+  const obj2 = { name: "test2", nested: { num: 2, ext: "more" } }
+  const obj3 = recursiveAssign({}, obj1, obj2)
+  //-> { id: 1, name: "test2", nested: { num: 2, keep: true, ext: "more" } }
+  ```
+
 ## 2023-04-12 0.10.0
 
 - Add method `jsonp.ts/parse` for get jsonp response value

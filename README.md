@@ -4,6 +4,15 @@ The utilities for `path`, `string`, `duration`.
 
 ## Usage
 
+
+### JsonP functions
+
+```ts
+import { parse } from "https://deno.land/x/nextrj_utils@$VERSION/jsonp.ts"
+const j = parse("jsonpCallbackName({ok: true})") as Record<string, boolean>
+assertStrictEquals(j.ok, true)
+```
+
 ### Path functions
 
 ```ts

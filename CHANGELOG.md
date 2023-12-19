@@ -1,5 +1,9 @@
 # NextRJ Utilities Changelog
 
+## 2023-12-19 0.12.0
+
+- Upgrade to `deno.land/std@0.209.0`
+
 ## 2023-04-14 0.11.0
 
 - Add method `object.js/recursiveAssign` for recursive assign object property value.
